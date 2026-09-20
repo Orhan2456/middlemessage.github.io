@@ -19,6 +19,7 @@
             --accent: #E0E0E0;
             --like-color: #FF3040;
             --danger: #FF453A;
+            --mention: #0A84FF;
         }
 
         * {
@@ -35,14 +36,13 @@
             display: flex;
             justify-content: center;
             height: 100vh;
-            overflow: hidden; /* Dış kaydırmayı kapat */
+            overflow: hidden;
         }
 
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
 
-        /* ANA ÇERÇEVE (Tüm sayfa burada kayar) */
         #app-container {
             display: flex;
             flex-direction: column;
@@ -52,12 +52,11 @@
             background-color: var(--bg-base);
             border-left: 1px solid var(--border);
             border-right: 1px solid var(--border);
-            overflow-y: auto; /* Kaydırma işlemi buraya alındı */
+            overflow-y: auto;
             scroll-behavior: smooth;
             position: relative;
         }
 
-        /* ÜST BAŞLIK (Sayfa kaysa bile üstte yapışık kalır) */
         header {
             position: sticky;
             top: 0;
@@ -72,7 +71,6 @@
             z-index: 50;
         }
 
-        /* ÇIKIŞ YAP BUTONU */
         #logout-btn {
             position: absolute;
             left: 20px;
@@ -105,15 +103,12 @@
         }
         .status.offline { background: #FF453A; }
 
-        /* =========================================
-           ORTALANMIŞ YAZMA BÖLÜMÜ (HERO SECTION)
-           ========================================= */
         #hero-section {
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-height: 40vh; /* Ekranın üstten %40'ını kaplar ve çubuğu ortalar */
+            min-height: 40vh; 
             padding: 20px;
             border-bottom: 1px solid var(--border);
             background: radial-gradient(circle at center, #181818 0%, #101010 100%);
@@ -127,14 +122,12 @@
             border: 1px solid #333;
             align-items: center;
             width: 100%;
-            max-width: 500px; /* Çok uzamasını engeller */
+            max-width: 500px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
             transition: border-color 0.3s;
         }
 
-        .input-wrapper:focus-within {
-            border-color: #555;
-        }
+        .input-wrapper:focus-within { border-color: #555; }
 
         #msg-input {
             flex: 1;
@@ -160,9 +153,6 @@
         #send-btn:hover { opacity: 0.8; }
         #send-btn:active { transform: scale(0.95); }
 
-        /* =========================================
-           MESAJ AKIŞI (ORTA ÇUBUĞUN ALTINDAN BAŞLAR)
-           ========================================= */
         #feed-window {
             display: flex;
             flex-direction: column;
@@ -235,6 +225,14 @@
             margin-bottom: 12px;
         }
 
+        .mention {
+            color: var(--mention);
+            font-weight: 600;
+            background: rgba(10, 132, 255, 0.15);
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
         .post-actions {
             display: flex;
             gap: 16px;
@@ -253,20 +251,10 @@
         }
         .action-btn:active { transform: scale(0.9); }
         
-        .btn-like svg {
-            fill: none;
-            stroke: var(--text-main);
-            stroke-width: 2;
-        }
+        .btn-like svg { fill: none; stroke: var(--text-main); stroke-width: 2; }
         .btn-like.liked { color: var(--like-color); font-weight: 500; }
-        .btn-like.liked svg {
-            fill: var(--like-color);
-            stroke: var(--like-color);
-        }
+        .btn-like.liked svg { fill: var(--like-color); stroke: var(--like-color); }
 
-        /* =========================================
-           KULLANICI ADI GİRİŞ EKRANI 
-           ========================================= */
         #welcome-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -288,20 +276,10 @@
             width: 90%;
             max-width: 340px;
             box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-            animation: fadeIn 0.4s ease;
         }
 
-        .modal-box h2 {
-            margin-bottom: 10px;
-            font-size: 1.4rem;
-        }
-
-        .modal-box p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 25px;
-            line-height: 1.4;
-        }
+        .modal-box h2 { margin-bottom: 10px; font-size: 1.4rem; }
+        .modal-box p { color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px; line-height: 1.4; }
 
         #username-input {
             width: 100%;
@@ -314,12 +292,8 @@
             outline: none;
             text-align: center;
             margin-bottom: 15px;
-            transition: border 0.3s;
         }
-
-        #username-input:focus {
-            border-color: #555;
-        }
+        #username-input:focus { border-color: #555; }
 
         #start-btn {
             width: 100%;
@@ -351,12 +325,8 @@
     </div>
 </div>
 
-<!-- Ana Uygulama (Tamamı Kaydırılabilir Çerçeve) -->
 <div id="app-container">
-    
-    <!-- Üst Başlık (Sabit) -->
     <header>
-        <!-- Çıkış Yap Butonu -->
         <button id="logout-btn" title="Farklı bir isimle gir (Çıkış Yap)">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -364,30 +334,24 @@
                 <line x1="21" y1="12" x2="9" y2="12"></line>
             </svg>
         </button>
-        
         <div class="brand">Middle Message 26</div>
         <div class="status" id="connection-status"></div>
     </header>
     
-    <!-- EKRANIN ORTASINDAKİ YAZMA ÇUBUĞU -->
     <div id="hero-section">
         <div class="input-wrapper">
-            <input type="text" id="msg-input" placeholder="Bir konu başlat..." autocomplete="off">
+            <input type="text" id="msg-input" placeholder="Bir konu başlat veya @isim etiketle..." autocomplete="off">
             <button id="send-btn">Paylaş</button>
         </div>
     </div>
 
-    <!-- MESAJLARIN LİSTELENDİĞİ ALAN (Yazma çubuğunun altında) -->
     <div id="feed-window">
         <!-- Akış Gönderileri Buraya Gelecek -->
     </div>
-    
 </div>
 
 <script>
-    // ========================================================
     // 1. FIREBASE BAĞLANTISI
-    // ========================================================
     const firebaseConfig = {
       apiKey: "AIzaSyD-E9XQdyJBg8fW2_UcT_wbRCGwhckzmKA",
       authDomain: "middlemessage26.firebaseapp.com",
@@ -404,7 +368,38 @@
     const messagesRef = db.ref('middle_message_26_room');
 
     // ========================================================
-    // KULLANICI ADI VE ÇIKIŞ YAPMA SİSTEMİ
+    // BİLDİRİM VE SES SİSTEMİ (WhatsApp Tarzı)
+    // ========================================================
+    const APP_LOAD_TIME = Date.now();
+    const notifiedMessages = new Set();
+    let unreadCount = 0;
+
+    // Şık ve kısa bir bildirim sesi ("ding")
+    const notifSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3');
+
+    function askNotificationPermission() {
+        if ("Notification" in window && Notification.permission !== "granted" && Notification.permission !== "denied") {
+            Notification.requestPermission();
+        }
+    }
+
+    function sendDesktopNotification(title, body) {
+        if ("Notification" in window && Notification.permission === "granted") {
+            new Notification(title, {
+                body: body,
+                icon: "https://cdn-icons-png.flaticon.com/512/3114/3114883.png" 
+            });
+        }
+    }
+
+    // Sekmeye geri dönüldüğünde başlığı sıfırla
+    window.addEventListener('focus', () => {
+        unreadCount = 0;
+        document.title = 'Middle Message 26';
+    });
+
+    // ========================================================
+    // KULLANICI ADI SİSTEMİ
     // ========================================================
     let myUsername = localStorage.getItem('mm26_username');
     const welcomeModal = document.getElementById('welcome-modal');
@@ -415,6 +410,8 @@
     if (!myUsername) {
         welcomeModal.style.display = 'flex';
         nameInput.focus();
+    } else {
+        askNotificationPermission(); 
     }
 
     function saveUsername() {
@@ -423,6 +420,14 @@
             myUsername = val;
             localStorage.setItem('mm26_username', myUsername);
             welcomeModal.style.display = 'none'; 
+            askNotificationPermission(); 
+            
+            // Tarayıcının ses çalma engelini kırmak için ilk girişte sesi sessizce yükletiyoruz
+            notifSound.volume = 0;
+            notifSound.play().then(() => {
+                notifSound.pause();
+                notifSound.volume = 1; // Sesi normale döndür
+            }).catch(e => console.log(e));
         } else {
             alert('Lütfen en az 3 harfli bir isim girin.');
         }
@@ -434,7 +439,7 @@
     });
 
     logoutBtn.addEventListener('click', () => {
-        if (confirm('Kullanıcı adınızı değiştirmek (çıkış yapmak) istediğinize emin misiniz?')) {
+        if (confirm('Çıkış yapmak istediğinize emin misiniz?')) {
             localStorage.removeItem('mm26_username'); 
             window.location.reload(); 
         }
@@ -473,8 +478,6 @@
         });
 
         msgInput.value = '';
-        
-        // Mesaj gönderilince, yazma alanını görmek için sayfayı en üste kaydırır
         appContainer.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
@@ -483,33 +486,68 @@
         if (e.key === 'Enter') sendMessage();
     });
 
+    function escapeHTML(str) {
+        return str.replace(/[&<>'"]/g, tag => ({
+            '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
+        }[tag]));
+    }
+
     messagesRef.on('value', (snapshot) => {
         feedWindow.innerHTML = ''; 
         const data = snapshot.val();
         if (!data) return;
 
-        // DİKKAT: En yeni mesajların en üstte (yazma çubuğunun tam altında) görünmesi için (b - a) sıralaması kullanıldı.
         const messages = Object.keys(data).map(key => ({
             id: key, ...data[key]
         })).sort((a, b) => b.timestamp - a.timestamp);
 
+        let hasNewUnseenMessage = false;
+
         messages.forEach(msg => {
             if (msg.deleted) return;
+
+            // ==========================================
+            // BİLDİRİM VE ETİKETLEME MANTIĞI
+            // ==========================================
+            const mentionTag = `@${myUsername}`;
+            const isMentioned = myUsername && msg.text.toLowerCase().includes(mentionTag.toLowerCase());
+
+            // Mesaj yeniyse ve biz yazmadıysak...
+            if (msg.timestamp > APP_LOAD_TIME && msg.username !== myUsername && !notifiedMessages.has(msg.id)) {
+                notifiedMessages.add(msg.id);
+                hasNewUnseenMessage = true;
+
+                // Etiketlendiysek her halükarda bildirim gönder
+                if (isMentioned) {
+                    sendDesktopNotification("Biri senden bahsetti!", `${msg.username}: "${msg.text}"`);
+                } 
+                // Etiketlenmedik ama arka plandaysak genel bildirim gönder (WhatsApp mantığı)
+                else if (document.hidden) {
+                    sendDesktopNotification(`Yeni Mesaj: ${msg.username}`, msg.text);
+                }
+            }
 
             const isLiked = localLikes[msg.id];
             const div = document.createElement('div');
             div.className = 'thread-post';
             
+            let safeText = escapeHTML(msg.text);
+            
+            if (myUsername) {
+                const regex = new RegExp(`@${myUsername}\\b`, 'gi');
+                safeText = safeText.replace(regex, `<span class="mention">$&</span>`);
+            }
+
             div.innerHTML = `
                 <div class="post-avatar">
-                    <div class="avatar-circle avatar-placeholder"></div>
+                    <div class="avatar-circle">${escapeHTML(msg.avatarChar || 'A')}</div>
                 </div>
                 <div class="post-content">
                     <div class="post-header">
-                        <span class="post-author author-placeholder"></span>
+                        <span class="post-author">${escapeHTML(msg.username || 'Anonim')}</span>
                         <span class="post-time">${msg.time}</span>
                     </div>
-                    <div class="post-text text-placeholder"></div>
+                    <div class="post-text">${safeText}</div>
                     <div class="post-actions">
                         <button class="action-btn btn-like ${isLiked ? 'liked' : ''}" onclick="likeMsg('${msg.id}', ${msg.likes})">
                             <svg width="20" height="20" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -527,12 +565,21 @@
                 </div>
             `;
             
-            div.querySelector('.avatar-placeholder').textContent = msg.avatarChar || 'A';
-            div.querySelector('.author-placeholder').textContent = msg.username || 'Anonim';
-            div.querySelector('.text-placeholder').textContent = msg.text;
-            
             feedWindow.appendChild(div);
         });
+
+        // Toplu Bildirim İşlemleri (Tüm liste yüklendikten sonra 1 kere çalışır)
+        if (hasNewUnseenMessage) {
+            // Ses Çal
+            notifSound.currentTime = 0;
+            notifSound.play().catch(e => console.log("Ses engellendi: ", e));
+
+            // Arka plandaysa sekme başlığına rakam ekle
+            if (document.hidden) {
+                unreadCount++;
+                document.title = `(${unreadCount}) Yeni Mesaj - Middle Message 26`;
+            }
+        }
     });
 
     window.likeMsg = function(msgId, currentLikes) {
