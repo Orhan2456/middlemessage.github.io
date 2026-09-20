@@ -35,13 +35,14 @@
             display: flex;
             justify-content: center;
             height: 100vh;
-            overflow: hidden;
+            overflow: hidden; /* Dış kaydırmayı kapat */
         }
 
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
 
+        /* ANA ÇERÇEVE (Tüm sayfa burada kayar) */
         #app-container {
             display: flex;
             flex-direction: column;
@@ -51,10 +52,15 @@
             background-color: var(--bg-base);
             border-left: 1px solid var(--border);
             border-right: 1px solid var(--border);
+            overflow-y: auto; /* Kaydırma işlemi buraya alındı */
+            scroll-behavior: smooth;
             position: relative;
         }
 
+        /* ÜST BAŞLIK (Sayfa kaysa bile üstte yapışık kalır) */
         header {
+            position: sticky;
+            top: 0;
             padding: 16px 20px;
             background: rgba(16, 16, 16, 0.85);
             backdrop-filter: blur(15px);
@@ -63,12 +69,10 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 10;
-            position: absolute;
-            top: 0; left: 0; right: 0;
+            z-index: 50;
         }
 
-        /* ÇIKIŞ YAP BUTONU TASARIMI */
+        /* ÇIKIŞ YAP BUTONU */
         #logout-btn {
             position: absolute;
             left: 20px;
@@ -101,24 +105,80 @@
         }
         .status.offline { background: #FF453A; }
 
-        #feed-window {
-            flex: 1;
-            overflow-y: auto;
-            padding: 70px 0 90px 0;
+        /* =========================================
+           ORTALANMIŞ YAZMA BÖLÜMÜ (HERO SECTION)
+           ========================================= */
+        #hero-section {
             display: flex;
             flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 40vh; /* Ekranın üstten %40'ını kaplar ve çubuğu ortalar */
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+            background: radial-gradient(circle at center, #181818 0%, #101010 100%);
+        }
+
+        .input-wrapper {
+            display: flex;
+            background-color: #1A1A1A;
+            border-radius: 30px;
+            padding: 8px 8px 8px 24px;
+            border: 1px solid #333;
+            align-items: center;
+            width: 100%;
+            max-width: 500px; /* Çok uzamasını engeller */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: border-color 0.3s;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #555;
+        }
+
+        #msg-input {
+            flex: 1;
+            background: none;
+            border: none;
+            color: var(--text-main);
+            font-size: 1.05rem;
+            outline: none;
+        }
+        #msg-input::placeholder { color: #555; }
+
+        #send-btn {
+            background-color: var(--text-main);
+            color: var(--bg-base);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        #send-btn:hover { opacity: 0.8; }
+        #send-btn:active { transform: scale(0.95); }
+
+        /* =========================================
+           MESAJ AKIŞI (ORTA ÇUBUĞUN ALTINDAN BAŞLAR)
+           ========================================= */
+        #feed-window {
+            display: flex;
+            flex-direction: column;
+            padding-bottom: 50px;
         }
 
         .thread-post {
             display: flex;
             gap: 12px;
-            padding: 16px 20px;
+            padding: 20px;
             border-bottom: 1px solid var(--border);
             animation: fadeIn 0.4s ease;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
@@ -129,8 +189,8 @@
         }
 
         .avatar-circle {
-            width: 40px;
-            height: 40px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
             background-color: #1e1e1e;
             display: flex;
@@ -168,7 +228,7 @@
         }
 
         .post-text {
-            font-size: 0.95rem;
+            font-size: 1rem;
             line-height: 1.5;
             white-space: pre-wrap;
             word-wrap: break-word;
@@ -204,49 +264,9 @@
             stroke: var(--like-color);
         }
 
-        #input-area {
-            position: absolute;
-            bottom: 0; left: 0; right: 0;
-            padding: 12px 20px 20px 20px;
-            background: rgba(16, 16, 16, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border);
-        }
-
-        .input-wrapper {
-            display: flex;
-            background-color: #1A1A1A;
-            border-radius: 30px;
-            padding: 6px 6px 6px 20px;
-            border: 1px solid #333;
-            align-items: center;
-        }
-
-        #msg-input {
-            flex: 1;
-            background: none;
-            border: none;
-            color: var(--text-main);
-            font-size: 1rem;
-            outline: none;
-        }
-        #msg-input::placeholder { color: #555; }
-
-        #send-btn {
-            background-color: var(--text-main);
-            color: var(--bg-base);
-            border: none;
-            padding: 10px 18px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
-        #send-btn:hover { opacity: 0.8; }
-
-        /* KULLANICI ADI GİRİŞ EKRANI */
+        /* =========================================
+           KULLANICI ADI GİRİŞ EKRANI 
+           ========================================= */
         #welcome-modal {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -315,6 +335,7 @@
 
         @media (max-width: 600px) {
             #app-container { border: none; }
+            #hero-section { min-height: 35vh; }
         }
     </style>
 </head>
@@ -330,10 +351,12 @@
     </div>
 </div>
 
-<!-- Ana Uygulama -->
+<!-- Ana Uygulama (Tamamı Kaydırılabilir Çerçeve) -->
 <div id="app-container">
+    
+    <!-- Üst Başlık (Sabit) -->
     <header>
-        <!-- YENİ EKLENEN ÇIKIŞ BUTONU -->
+        <!-- Çıkış Yap Butonu -->
         <button id="logout-btn" title="Farklı bir isimle gir (Çıkış Yap)">
             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
@@ -346,20 +369,25 @@
         <div class="status" id="connection-status"></div>
     </header>
     
-    <div id="feed-window">
-        <!-- Akış Gönderileri Buraya Gelecek -->
-    </div>
-    
-    <div id="input-area">
+    <!-- EKRANIN ORTASINDAKİ YAZMA ÇUBUĞU -->
+    <div id="hero-section">
         <div class="input-wrapper">
             <input type="text" id="msg-input" placeholder="Bir konu başlat..." autocomplete="off">
             <button id="send-btn">Paylaş</button>
         </div>
     </div>
+
+    <!-- MESAJLARIN LİSTELENDİĞİ ALAN (Yazma çubuğunun altında) -->
+    <div id="feed-window">
+        <!-- Akış Gönderileri Buraya Gelecek -->
+    </div>
+    
 </div>
 
 <script>
+    // ========================================================
     // 1. FIREBASE BAĞLANTISI
+    // ========================================================
     const firebaseConfig = {
       apiKey: "AIzaSyD-E9XQdyJBg8fW2_UcT_wbRCGwhckzmKA",
       authDomain: "middlemessage26.firebaseapp.com",
@@ -376,27 +404,25 @@
     const messagesRef = db.ref('middle_message_26_room');
 
     // ========================================================
-    // KULLANICI ADI SİSTEMİ VE ÇIKIŞ YAPMA ÖZELLİĞİ
+    // KULLANICI ADI VE ÇIKIŞ YAPMA SİSTEMİ
     // ========================================================
     let myUsername = localStorage.getItem('mm26_username');
     const welcomeModal = document.getElementById('welcome-modal');
     const nameInput = document.getElementById('username-input');
     const startBtn = document.getElementById('start-btn');
-    const logoutBtn = document.getElementById('logout-btn'); // Çıkış butonu
+    const logoutBtn = document.getElementById('logout-btn');
 
-    // Eğer daha önce isim girilmemişse ekranı göster
     if (!myUsername) {
         welcomeModal.style.display = 'flex';
         nameInput.focus();
     }
 
-    // İsim Kaydetme Fonksiyonu
     function saveUsername() {
         const val = nameInput.value.trim();
         if (val.length >= 3) {
             myUsername = val;
             localStorage.setItem('mm26_username', myUsername);
-            welcomeModal.style.display = 'none'; // Ekranı kapat
+            welcomeModal.style.display = 'none'; 
         } else {
             alert('Lütfen en az 3 harfli bir isim girin.');
         }
@@ -407,28 +433,22 @@
         if (e.key === 'Enter') saveUsername();
     });
 
-    // ÇIKIŞ YAPMA İŞLEMİ (Yeni Eklenen)
     logoutBtn.addEventListener('click', () => {
         if (confirm('Kullanıcı adınızı değiştirmek (çıkış yapmak) istediğinize emin misiniz?')) {
-            localStorage.removeItem('mm26_username'); // İsmi hafızadan sil
-            window.location.reload(); // Sayfayı yenile ve giriş ekranını (modal) tekrar aç
+            localStorage.removeItem('mm26_username'); 
+            window.location.reload(); 
         }
     });
 
     // ========================================================
     // ARAYÜZ VE İŞLEMLER
     // ========================================================
+    const appContainer = document.getElementById('app-container');
     const feedWindow = document.getElementById('feed-window');
     const msgInput = document.getElementById('msg-input');
     const sendBtn = document.getElementById('send-btn');
     const statusDot = document.getElementById('connection-status');
     const localLikes = JSON.parse(localStorage.getItem('mm26_likes')) || {};
-    let isUserScrolledUp = false;
-
-    feedWindow.addEventListener('scroll', () => {
-        const isAtBottom = feedWindow.scrollHeight - feedWindow.scrollTop <= feedWindow.clientHeight + 50;
-        isUserScrolledUp = !isAtBottom;
-    });
 
     db.ref('.info/connected').on('value', function(snap) {
         statusDot.className = snap.val() === true ? "status" : "status offline";
@@ -436,17 +456,15 @@
 
     function sendMessage() {
         const text = msgInput.value.trim();
-        // İsim yoksa veya mesaj boşsa gönderme
         if (!text || !myUsername) return;
 
         const timestamp = Date.now();
         const dateObj = new Date(timestamp);
         const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
 
-        // Gönderilen veriye Username'i de ekliyoruz
         messagesRef.push({
             username: myUsername,
-            avatarChar: myUsername.charAt(0).toUpperCase(), // İsmin ilk harfi
+            avatarChar: myUsername.charAt(0).toUpperCase(),
             text: text,
             time: timeStr,
             timestamp: timestamp,
@@ -455,6 +473,9 @@
         });
 
         msgInput.value = '';
+        
+        // Mesaj gönderilince, yazma alanını görmek için sayfayı en üste kaydırır
+        appContainer.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     sendBtn.addEventListener('click', sendMessage);
@@ -467,9 +488,10 @@
         const data = snapshot.val();
         if (!data) return;
 
+        // DİKKAT: En yeni mesajların en üstte (yazma çubuğunun tam altında) görünmesi için (b - a) sıralaması kullanıldı.
         const messages = Object.keys(data).map(key => ({
             id: key, ...data[key]
-        })).sort((a, b) => a.timestamp - b.timestamp);
+        })).sort((a, b) => b.timestamp - a.timestamp);
 
         messages.forEach(msg => {
             if (msg.deleted) return;
@@ -478,7 +500,6 @@
             const div = document.createElement('div');
             div.className = 'thread-post';
             
-            // XSS Güvenliği İçin Güvenli HTML Yapısı
             div.innerHTML = `
                 <div class="post-avatar">
                     <div class="avatar-circle avatar-placeholder"></div>
@@ -506,17 +527,12 @@
                 </div>
             `;
             
-            // Hacker'ların isim veya mesaj kısmına kod yazmasını engellemek için %100 güvenli textContent yöntemi:
             div.querySelector('.avatar-placeholder').textContent = msg.avatarChar || 'A';
             div.querySelector('.author-placeholder').textContent = msg.username || 'Anonim';
             div.querySelector('.text-placeholder').textContent = msg.text;
             
             feedWindow.appendChild(div);
         });
-
-        if (!isUserScrolledUp) {
-            feedWindow.scrollTo({ top: feedWindow.scrollHeight, behavior: 'smooth' });
-        }
     });
 
     window.likeMsg = function(msgId, currentLikes) {
