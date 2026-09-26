@@ -127,62 +127,34 @@
         /* YAZMA ALANI */
         #hero-section {
             display: flex; flex-direction: column; justify-content: center; align-items: center;
-            min-height: 35vh; padding: 20px; border-bottom: 1px solid var(--border);
+            min-height: 35vh; padding: 20px 10px; border-bottom: 1px solid var(--border);
             background: radial-gradient(circle at center, #181818 0%, #101010 100%);
         }
 
-        /* Fotoğraf Önizleme Alanı (Yazma Çubuğunun Üstünde) */
-        #image-preview-container {
-            display: none;
-            position: relative;
-            margin-bottom: 15px;
-            width: 100%;
-            max-width: 400px;
-        }
-        #image-preview {
-            width: 100%;
-            border-radius: 16px;
-            border: 1px solid #333;
-            max-height: 250px;
-            object-fit: cover;
-        }
-        #cancel-image-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(0,0,0,0.7);
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
         .input-wrapper {
-            display: flex; background-color: #1A1A1A; border-radius: 30px; padding: 8px 8px 8px 20px;
-            border: 1px solid #333; align-items: center; width: 100%; max-width: 500px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: border-color 0.3s;
-            gap: 10px;
+            display: flex; background-color: #1A1A1A; border-radius: 30px; padding: 6px 6px 6px 20px;
+            border: 1px solid #333; align-items: center; width: 95%; max-width: 500px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: border-color 0.3s; gap: 10px;
         }
         .input-wrapper:focus-within { border-color: #555; }
         
-        #post-image-label {
-            color: var(--text-muted); cursor: pointer; display: flex; align-items: center;
-            transition: color 0.2s; padding: 5px;
+        #msg-input { 
+            flex: 1; min-width: 0; background: none; border: none; color: var(--text-main); font-size: 1rem; outline: none; 
         }
-        #post-image-label:hover { color: var(--text-main); }
-
-        #msg-input { flex: 1; background: none; border: none; color: var(--text-main); font-size: 1.05rem; outline: none; }
+        
         #send-btn {
-            background-color: var(--text-main); color: var(--bg-base); border: none; padding: 10px 20px;
-            border-radius: 20px; font-weight: 700; font-size: 0.95rem; cursor: pointer; transition: opacity 0.2s, transform 0.1s;
+            flex-shrink: 0; background-color: var(--text-main); color: var(--bg-base); border: none; 
+            padding: 10px 20px; border-radius: 20px; font-weight: 700; font-size: 0.95rem; 
+            cursor: pointer; transition: opacity 0.2s, transform 0.1s;
         }
         #send-btn:active { transform: scale(0.95); }
+        #send-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* YAZIYOR GÖSTERGESİ */
+        #typing-indicator {
+            padding: 10px 20px; color: var(--text-muted); font-size: 0.85rem; font-style: italic;
+            display: none; animation: fadeIn 0.3s ease;
+        }
 
         /* AKIŞ VE GÖNDERİLER */
         #feed-window { display: flex; flex-direction: column; padding-bottom: 50px; }
@@ -201,24 +173,17 @@
             text-transform: uppercase; object-fit: cover;
         }
 
-        .post-content { flex: 1; display: flex; flex-direction: column; }
+        .post-content { flex: 1; display: flex; flex-direction: column; min-width: 0; }
         .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-        .post-author { font-weight: 600; font-size: 0.95rem; color: var(--text-main); }
-        .post-time { font-size: 0.85rem; color: var(--text-muted); }
+        .post-author { font-weight: 600; font-size: 0.95rem; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .post-time { font-size: 0.85rem; color: var(--text-muted); flex-shrink: 0; }
         
-        .post-text { font-size: 1rem; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; color: #E5E5E5; }
-        .post-text:not(:empty) { margin-bottom: 12px; }
+        .post-text { font-size: 1rem; line-height: 1.5; white-space: pre-wrap; word-wrap: break-word; color: #E5E5E5; margin-bottom: 12px; }
+        
+        /* Tıklanabilir Linkler */
+        .post-link { color: var(--mention); text-decoration: none; }
+        .post-link:hover { text-decoration: underline; }
 
-        /* Akıştaki Gönderilen Fotoğraf */
-        .post-feed-image {
-            max-width: 100%;
-            border-radius: 14px;
-            margin-bottom: 12px;
-            border: 1px solid #333;
-            object-fit: cover;
-            max-height: 500px;
-        }
-        
         .mention { color: var(--mention); font-weight: 600; background: rgba(10, 132, 255, 0.15); padding: 2px 6px; border-radius: 6px; }
 
         .post-actions { display: flex; gap: 16px; }
@@ -269,6 +234,12 @@
         #avatar-upload-label:hover { transform: scale(1.1); }
 
         .profile-username { font-size: 1.5rem; font-weight: bold; margin-bottom: 5px; }
+        
+        /* BİYOGRAFİ STİLLERİ */
+        .profile-bio { font-size: 0.95rem; color: #ccc; margin-bottom: 10px; font-style: italic; }
+        #edit-bio-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; margin-bottom: 15px; text-decoration: underline; display: none; margin-left: auto; margin-right: auto; }
+        #edit-bio-btn:hover { color: var(--text-main); }
+
         .follower-count-box { color: var(--text-muted); font-size: 1rem; margin-bottom: 25px; }
         .follower-count-box span { color: var(--text-main); font-weight: bold; }
         
@@ -280,7 +251,7 @@
         
         @media (max-width: 600px) {
             #app-container { border: none; }
-            #hero-section { min-height: 35vh; }
+            #hero-section { min-height: 30vh; }
         }
     </style>
 </head>
@@ -310,6 +281,11 @@
             <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
         </div>
         <div class="profile-username" id="profile-name">Anonim</div>
+        
+        <!-- YENİ: BİYOGRAFİ ALANI -->
+        <div class="profile-bio" id="profile-bio"></div>
+        <button id="edit-bio-btn">Düzenle</button>
+
         <div class="follower-count-box"><span id="profile-followers">0</span> Takipçi</div>
         <button id="follow-btn">Takip Et</button>
     </div>
@@ -345,25 +321,14 @@
     </div>
     
     <div id="hero-section">
-        <!-- Gönderi Fotoğrafı Önizleme -->
-        <div id="image-preview-container">
-            <button id="cancel-image-btn" title="İptal Et">&times;</button>
-            <img id="image-preview" src="" alt="Önizleme">
-        </div>
-        
         <div class="input-wrapper">
-            <!-- Fotoğraf Ekleme İkonu -->
-            <label for="post-image-upload" id="post-image-label" title="Fotoğraf Ekle">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline>
-                </svg>
-            </label>
-            <input type="file" id="post-image-upload" accept="image/*" style="display: none;">
-            
             <input type="text" id="msg-input" placeholder="Bir şey paylaş..." autocomplete="off">
             <button id="send-btn">Paylaş</button>
         </div>
     </div>
+    
+    <!-- YENİ: YAZIYOR GÖSTERGESİ -->
+    <div id="typing-indicator"></div>
 
     <div id="feed-window"></div>
 </div>
@@ -388,6 +353,7 @@
     const messagesRef = db.ref('middle_message_26_room');
     const usersRef = db.ref('middle_message_26_users');
     const followersRef = db.ref('middle_message_26_followers');
+    const typingRef = db.ref('middle_message_26_typing'); // YENİ: Yazıyor düğümü
 
     // ========================================================
     // BİLDİRİM VE SES SİSTEMİ
@@ -504,7 +470,7 @@
     });
 
     // ========================================================
-    // PROFİL GÖRÜNTÜLEME & AVATAR YÜKLEME
+    // PROFİL GÖRÜNTÜLEME, BİYOGRAFİ & AVATAR YÜKLEME
     // ========================================================
     const profileModal = document.getElementById('profile-modal');
     const profileCloseBtn = document.getElementById('profile-close');
@@ -513,17 +479,20 @@
     const avatarUploadLabel = document.getElementById('avatar-upload-label');
     const avatarUploadInput = document.getElementById('avatar-upload');
     const profileName = document.getElementById('profile-name');
+    const profileBio = document.getElementById('profile-bio');
+    const editBioBtn = document.getElementById('edit-bio-btn');
     const profileFollowers = document.getElementById('profile-followers');
     const followBtn = document.getElementById('follow-btn');
     let currentProfileUser = ""; let profileListener = null;
 
-    myProfileBtn.addEventListener('click', () => { if(myUsername) openProfile(myUsername); });
-
-    function openProfile(targetUsername) {
+    // Profil açma fonksiyonunu global yapıyoruz ki etiketlerden de tetiklenebilsin
+    window.openProfile = function(targetUsername) {
         currentProfileUser = targetUsername;
         profileName.textContent = targetUsername;
         
         const targetUserData = allUsersData[targetUsername];
+        
+        // Avatar İşlemi
         if (targetUserData && targetUserData.profilePic) {
             profileImg.src = targetUserData.profilePic;
             profileImg.style.display = 'block'; profileInitial.style.display = 'none';
@@ -532,32 +501,52 @@
             profileImg.style.display = 'none'; profileInitial.style.display = 'flex';
         }
         
+        // YENİ: Biyografi İşlemi
+        const defaultBio = "Merhaba, ben Middle Message 26 kullanıcısıyım.";
+        profileBio.textContent = (targetUserData && targetUserData.bio) ? targetUserData.bio : defaultBio;
+        
+        // Kendi profilimse gizli butonları aç
         if (targetUsername === myUsername) {
-            followBtn.style.display = 'none'; avatarUploadLabel.style.display = 'flex';
+            followBtn.style.display = 'none'; 
+            avatarUploadLabel.style.display = 'flex';
+            editBioBtn.style.display = 'block';
         } else {
-            followBtn.style.display = 'block'; avatarUploadLabel.style.display = 'none';
+            followBtn.style.display = 'block'; 
+            avatarUploadLabel.style.display = 'none';
+            editBioBtn.style.display = 'none';
         }
 
         profileModal.style.display = 'flex';
 
+        // Takipçi Dinleyici
         if (profileListener) followersRef.child(currentProfileUser).off('value', profileListener);
         profileListener = followersRef.child(currentProfileUser).on('value', snap => {
             const followersData = snap.val();
             let count = 0; let amIFollowing = false;
-            
             if (followersData) {
                 const keys = Object.keys(followersData);
                 count = keys.length;
                 if (keys.includes(myUsername)) amIFollowing = true;
             }
-            
             profileFollowers.textContent = count;
             if (amIFollowing) { followBtn.textContent = 'Takibi Bırak'; followBtn.className = 'following'; }
             else { followBtn.textContent = 'Takip Et'; followBtn.className = ''; }
         });
     }
 
+    myProfileBtn.addEventListener('click', () => { if(myUsername) openProfile(myUsername); });
+
     profileCloseBtn.onclick = () => { profileModal.style.display = 'none'; if (profileListener) followersRef.child(currentProfileUser).off('value', profileListener); };
+
+    // YENİ: Biyografi Düzenleme
+    editBioBtn.onclick = () => {
+        const newBio = prompt("Yeni biyografinizi yazın (Maks. 60 Karakter):");
+        if (newBio !== null) {
+            const cleanBio = newBio.trim().substring(0, 60); // 60 Karakter sınırı
+            usersRef.child(myUsername).update({ bio: cleanBio });
+            profileBio.textContent = cleanBio || "Merhaba, ben Middle Message 26 kullanıcısıyım.";
+        }
+    };
 
     followBtn.onclick = () => {
         if (!myUsername || currentProfileUser === myUsername) return;
@@ -594,46 +583,35 @@
     });
 
     // ========================================================
-    // YENİ: GÖNDERİYE FOTOĞRAF EKLEME SİSTEMİ
+    // YENİ: YAZIYOR GÖSTERGESİ SİSTEMİ
     // ========================================================
-    const postImageUpload = document.getElementById('post-image-upload');
-    const imagePreviewContainer = document.getElementById('image-preview-container');
-    const imagePreview = document.getElementById('image-preview');
-    const cancelImageBtn = document.getElementById('cancel-image-btn');
-    let pendingPostImage = null; // Gönderilmeye hazır fotoğrafı tutar
+    const msgInput = document.getElementById('msg-input');
+    const typingIndicatorDiv = document.getElementById('typing-indicator');
+    let typingTimeout;
 
-    postImageUpload.addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = (event) => {
-            const img = new Image();
-            img.onload = () => {
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                // Gönderi fotoğrafları profilden daha büyük olur, max 800px'e sıkıştır
-                const MAX_SIZE = 800;
-                let width = img.width, height = img.height;
-                
-                if (width > height) { if (width > MAX_SIZE) { height *= MAX_SIZE / width; width = MAX_SIZE; } } 
-                else { if (height > MAX_SIZE) { width *= MAX_SIZE / height; height = MAX_SIZE; } }
-                
-                canvas.width = width; canvas.height = height;
-                ctx.drawImage(img, 0, 0, width, height);
-                
-                pendingPostImage = canvas.toDataURL('image/jpeg', 0.75);
-                imagePreview.src = pendingPostImage;
-                imagePreviewContainer.style.display = 'block';
-            };
-            img.src = event.target.result;
-        };
-        reader.readAsDataURL(file);
+    msgInput.addEventListener('input', () => {
+        if(!myUsername) return;
+        typingRef.child(myUsername).set(true);
+        
+        clearTimeout(typingTimeout);
+        // 2 saniye boyunca tuşa basılmazsa "yazıyor" durumunu kaldır
+        typingTimeout = setTimeout(() => {
+            typingRef.child(myUsername).remove();
+        }, 2000);
     });
 
-    cancelImageBtn.addEventListener('click', () => {
-        pendingPostImage = null;
-        postImageUpload.value = '';
-        imagePreviewContainer.style.display = 'none';
+    // Yazıyor düğümünü dinle ve ekrana bas
+    typingRef.on('value', snap => {
+        const typists = snap.val() || {};
+        // Kendi adım hariç, yazan kişilerin isimlerini al
+        const names = Object.keys(typists).filter(name => name !== myUsername);
+        
+        if (names.length > 0) {
+            typingIndicatorDiv.textContent = names.join(', ') + ' yazıyor...';
+            typingIndicatorDiv.style.display = 'block';
+        } else {
+            typingIndicatorDiv.style.display = 'none';
+        }
     });
 
     // ========================================================
@@ -641,7 +619,6 @@
     // ========================================================
     const appContainer = document.getElementById('app-container');
     const feedWindow = document.getElementById('feed-window');
-    const msgInput = document.getElementById('msg-input');
     const sendBtn = document.getElementById('send-btn');
     const statusDot = document.getElementById('connection-status');
     const localLikes = JSON.parse(localStorage.getItem('mm26_likes')) || {};
@@ -652,30 +629,34 @@
 
     function sendMessage() {
         const text = msgInput.value.trim();
-        // Yazı VEYA Fotoğraf yoksa gönderme
-        if ((!text && !pendingPostImage) || !myUsername) return;
+        if (!text || !myUsername) return;
 
         const timestamp = Date.now();
         const dateObj = new Date(timestamp);
         const timeStr = dateObj.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
 
+        sendBtn.textContent = '...';
+        sendBtn.disabled = true;
+
         messagesRef.push({
             username: myUsername,
             avatarChar: myUsername.charAt(0).toUpperCase(),
-            text: text, // Boş olabilir
-            image: pendingPostImage || null, // Fotoğraf varsa ekle
+            text: text, 
             time: timeStr,
             timestamp: timestamp,
             likes: 0,
             deleted: false
+        }).then(() => {
+            msgInput.value = '';
+            appContainer.scrollTo({ top: 0, behavior: 'smooth' });
+            sendBtn.textContent = 'Paylaş';
+            sendBtn.disabled = false;
+            typingRef.child(myUsername).remove(); // Gönderince yazıyor bilgisini hemen sil
+        }).catch((err) => {
+            alert("Gönderilemedi!");
+            sendBtn.textContent = 'Paylaş';
+            sendBtn.disabled = false;
         });
-
-        msgInput.value = '';
-        pendingPostImage = null;
-        postImageUpload.value = '';
-        imagePreviewContainer.style.display = 'none';
-
-        appContainer.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     sendBtn.addEventListener('click', sendMessage);
@@ -695,6 +676,7 @@
         messages.forEach(msg => {
             if (msg.deleted) return;
 
+            // Bildirim Mantığı
             const mentionTag = `@${myUsername}`;
             const isMentioned = myUsername && msg.text && msg.text.toLowerCase().includes(mentionTag.toLowerCase());
 
@@ -704,7 +686,7 @@
                 if (isMentioned) {
                     sendDesktopNotification("Biri senden bahsetti!", `${msg.username}: "${msg.text}"`);
                 } else if (document.hidden) {
-                    sendDesktopNotification(`Yeni Mesaj: ${msg.username}`, msg.text || "Bir fotoğraf paylaştı.");
+                    sendDesktopNotification(`Yeni Mesaj: ${msg.username}`, msg.text);
                 }
             }
 
@@ -712,12 +694,18 @@
             const div = document.createElement('div');
             div.className = 'thread-post';
             
+            // YENİ: XSS Güvenliği + Tıklanabilir URL ve Tıklanabilir Profil Etiketleri
             let safeText = escapeHTML(msg.text || "");
-            if (myUsername && safeText) {
-                const regex = new RegExp(`@${myUsername}\\b`, 'gi');
-                safeText = safeText.replace(regex, `<span class="mention">$&</span>`);
-            }
+            
+            // 1. Linkleri Tıklanabilir Yap (http veya https)
+            const urlRegex = /(https?:\/\/[^\s]+)/g;
+            safeText = safeText.replace(urlRegex, '<a href="$1" target="_blank" class="post-link">$1</a>');
 
+            // 2. Etiketleri (@kullanici) Tıklanabilir Profile Dönüştür
+            const mentionRegex = /@([a-zA-Z0-9_ğüşöçıİĞÜŞÖÇ]+)/gi;
+            safeText = safeText.replace(mentionRegex, `<span class="mention clickable-profile" onclick="openProfile('$1')">@$1</span>`);
+
+            // Profil İkonu
             const msgUserObj = allUsersData[msg.username];
             let renderAvatarHTML = '';
             if (msgUserObj && msgUserObj.profilePic) {
@@ -726,10 +714,15 @@
                 renderAvatarHTML = `<div class="avatar-circle clickable-profile" onclick="openProfile('${escapeHTML(msg.username)}')">${escapeHTML(msg.avatarChar || 'A')}</div>`;
             }
 
-            // GÖNDERİLEN FOTOĞRAFI GÖSTERME
-            let uploadedImageHTML = '';
-            if (msg.image) {
-                uploadedImageHTML = `<img src="${msg.image}" class="post-feed-image" alt="Gönderi Resmi">`;
+            // YENİ: Sadece kendi mesajını silme mantığı
+            let deleteBtnHTML = '';
+            if (msg.username === myUsername) {
+                deleteBtnHTML = `
+                <button class="action-btn btn-delete" onclick="deleteMsg('${msg.id}')" title="Gönderiyi Sil">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                    </svg>
+                </button>`;
             }
 
             div.innerHTML = `
@@ -742,7 +735,6 @@
                         <span class="post-time">${msg.time}</span>
                     </div>
                     <div class="post-text">${safeText}</div>
-                    ${uploadedImageHTML}
                     <div class="post-actions">
                         <button class="action-btn btn-like ${isLiked ? 'liked' : ''}" onclick="likeMsg('${msg.id}', ${msg.likes})">
                             <svg width="20" height="20" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
@@ -750,11 +742,7 @@
                             </svg>
                             <span>${msg.likes > 0 ? msg.likes : ''}</span>
                         </button>
-                        <button class="action-btn btn-delete" onclick="deleteMsg('${msg.id}')" title="Gönderiyi Sil">
-                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#777" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                            </svg>
-                        </button>
+                        ${deleteBtnHTML}
                     </div>
                 </div>
             `;
