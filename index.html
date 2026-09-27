@@ -251,7 +251,7 @@
         #edit-bio-btn { background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.85rem; margin-bottom: 15px; text-decoration: underline; display: none; margin-left: auto; margin-right: auto; }
         #edit-bio-btn:hover { color: var(--text-main); }
 
-        .follower-count-box { color: var(--text-muted); font-size: 1rem; margin-bottom: 25px; }
+        .follower-count-box { color: var(--text-muted); font-size: 1rem; margin-bottom: 15px; }
         .follower-count-box span { color: var(--text-main); font-weight: bold; }
         
         #follow-btn {
@@ -259,6 +259,13 @@
             font-size: 1.05rem; font-weight: bold; border: none; cursor: pointer; width: 100%; transition: 0.2s;
         }
         #follow-btn.following { background: transparent; color: var(--text-main); border: 1px solid #555; }
+
+        /* YENİ: DM BUTONU */
+        #dm-btn {
+            padding: 10px 30px; border-radius: 20px; background: #1A1A1A; color: var(--text-main); border: 1px solid #333;
+            font-size: 1rem; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; margin-top: 10px; display: none;
+        }
+        #dm-btn:hover { background: #222; }
 
         /* YÖNETİM (ADMIN) PANELI STİLLERİ */
         #admin-user-list {
@@ -284,6 +291,18 @@
         .admin-btn-small.success { background: #3fb950; }
         .admin-btn-small.primary { background: var(--mention); }
 
+        /* YENİ: INBOX VE DM STİLLERİ */
+        #inbox-list { overflow-y: auto; flex: 1; margin-top: 15px; text-align: left; }
+        .inbox-item { display: flex; align-items: center; gap: 12px; padding: 12px; border-bottom: 1px solid #222; cursor: pointer; transition: 0.2s; }
+        .inbox-item:hover { background: #222; }
+        .inbox-unread-dot { width: 10px; height: 10px; background: var(--danger); border-radius: 50%; flex-shrink: 0; }
+        
+        #dm-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 5px; margin-bottom: 15px; }
+        .dm-bubble { max-width: 80%; padding: 10px 14px; border-radius: 16px; font-size: 0.95rem; line-height: 1.4; word-wrap: break-word; text-align: left; }
+        .dm-bubble.mine { align-self: flex-end; background: var(--mention); color: #fff; border-bottom-right-radius: 4px; }
+        .dm-bubble.theirs { align-self: flex-start; background: #2A2A2A; color: #fff; border-bottom-left-radius: 4px; }
+        .dm-time { font-size: 0.7rem; color: rgba(255,255,255,0.6); margin-top: 4px; text-align: right; }
+
         @media (max-width: 600px) {
             #app-container { border: none; }
             #hero-section { min-height: 30vh; }
@@ -294,7 +313,6 @@
 
 <!-- SVG IKONLARI -->
 <svg style="display:none;">
-    <!-- Mavi Tik İkonu -->
     <symbol id="icon-verified" viewBox="0 0 24 24">
         <path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"></path>
     </symbol>
@@ -335,6 +353,9 @@
 
         <div class="follower-count-box"><span id="profile-followers">0</span> Takipçi</div>
         <button id="follow-btn">Takip Et</button>
+        
+        <!-- YENİ: ÖZEL MESAJ GÖNDER BUTONU -->
+        <button id="dm-btn">Mesaj Gönder</button>
     </div>
 </div>
 
@@ -350,9 +371,45 @@
     </div>
 </div>
 
+<!-- YENİ: MESAJ KUTUSU (INBOX) MODALI -->
+<div id="inbox-modal" class="modal-overlay">
+    <div class="modal-box" style="height: 70vh; display: flex; flex-direction: column;">
+        <button class="modal-close-btn" onclick="document.getElementById('inbox-modal').style.display='none'">&times;</button>
+        <h2>Mesajlarım</h2>
+        <div id="inbox-list">
+            <!-- Sohbet edilen kişiler buraya gelecek -->
+        </div>
+    </div>
+</div>
+
+<!-- YENİ: BİREBİR ÖZEL MESAJLAŞMA (DM) MODALI -->
+<div id="dm-modal" class="modal-overlay">
+    <div class="modal-box" style="height: 85vh; max-height: 650px; width: 95%; max-width: 450px; display: flex; flex-direction: column; padding: 20px 15px;">
+        <button class="modal-close-btn" onclick="document.getElementById('dm-modal').style.display='none'">&times;</button>
+        <h2 id="dm-header-name" style="margin-bottom: 15px; border-bottom: 1px solid #333; padding-bottom: 10px; font-size:1.2rem;">User</h2>
+        
+        <div id="dm-messages">
+            <!-- Özel Mesajlar buraya -->
+        </div>
+        
+        <div style="display:flex; gap:10px;">
+            <input type="text" id="dm-input" placeholder="Mesaj yaz..." style="flex:1; padding:12px 15px; border-radius:20px; border:1px solid #333; background:#000; color:#fff; outline:none;">
+            <button id="dm-send-btn" class="main-btn" style="width:auto; padding:0 20px; margin:0; border-radius:20px;">Gönder</button>
+        </div>
+    </div>
+</div>
+
 <div id="app-container">
     <header>
         <div class="header-left-actions">
+            <!-- YENİ: MESAJ KUTUSU (ZARF) BUTONU -->
+            <button class="header-icon-btn" id="open-inbox-btn" title="Mesaj Kutum" style="position:relative;">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline>
+                </svg>
+                <div id="inbox-badge" style="position:absolute; top:-2px; right:-2px; background:var(--danger); width:10px; height:10px; border-radius:50%; display:none;"></div>
+            </button>
+
             <button class="header-icon-btn danger-btn" id="logout-btn" title="Çıkış Yap">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line>
@@ -363,7 +420,6 @@
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>
                 </svg>
             </button>
-            <!-- ADMİN BUTONU (Sadece yetkililer görür) -->
             <button class="header-icon-btn admin-btn-header" id="admin-panel-btn" title="Yönetim Paneli" style="display:none;">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
@@ -416,6 +472,9 @@
     const usersRef = db.ref('middle_message_26_users');
     const followersRef = db.ref('middle_message_26_followers');
     const typingRef = db.ref('middle_message_26_typing');
+    // YENİ: DM VE INBOX DÜĞÜMLERİ
+    const inboxRef = db.ref('middle_message_26_inbox');
+    const dmRef = db.ref('middle_message_26_dms');
 
     // ========================================================
     // BİLDİRİM VE SES SİSTEMİ
@@ -430,11 +489,13 @@
             Notification.requestPermission();
         }
     }
+    
     function sendDesktopNotification(title, body) {
         if ("Notification" in window && Notification.permission === "granted") {
             new Notification(title, { body: body, icon: "https://cdn-icons-png.flaticon.com/512/3114/3114883.png" });
         }
     }
+    
     window.addEventListener('focus', () => { unreadCount = 0; document.title = 'Middle Message 26'; });
 
     function escapeHTML(str) {
@@ -454,14 +515,12 @@
         if (snap.val()) {
             allUsersData = snap.val(); 
             
-            // BAN KONTROLÜ: Kullanıcı anlık sitedeyken banlanırsa sistemden atılır
             if (myUsername && allUsersData[myUsername] && allUsersData[myUsername].banned) {
                 alert("Hesabınız bir yönetici tarafından kalıcı olarak engellenmiştir.");
                 localStorage.removeItem('mm26_username');
                 window.location.reload();
             }
 
-            // ADMİN BUTONU GÖSTERİMİ
             if (myUsername && allUsersData[myUsername] && allUsersData[myUsername].role === 'admin') {
                 document.getElementById('admin-panel-btn').style.display = 'flex';
             } else {
@@ -479,11 +538,10 @@
     const startBtn = document.getElementById('start-btn');
     const logoutBtn = document.getElementById('logout-btn');
     
-    // GİZLİ ADMİN YAPMA (Çift Tıklama)
     document.getElementById('brand-logo').addEventListener('dblclick', () => {
         if (!myUsername) return;
         const secret = prompt("Kurucu şifresini girin:");
-        if (secret && btoa(secret) === "T3JoYW5BZG1pbg==") { // OrhanAdmin
+        if (secret && btoa(secret) === "T3JoYW5BZG1pbg==") { 
             usersRef.child(myUsername).update({ role: 'admin' });
             alert("Tebrikler! Kurucu Yönetici yetkileriniz aktif edildi.");
         }
@@ -495,47 +553,38 @@
     } else {
         askNotificationPermission(); 
         usersRef.child(myUsername).update({ lastActive: Date.now() });
+        initInboxListener(); // Hesaba girince mesaj kutusunu dinlemeye başla
     }
 
     function saveUsername() {
         let val = nameInput.value.trim().replace(/[.#$\[\]]/g, '');
         if (val.length < 3) return alert('Lütfen en az 3 harfli geçerli bir isim girin.');
 
-        // Kullanıcı önceden kayıtlı mı kontrol et
         usersRef.child(val).once('value').then(snap => {
             const data = snap.val();
             
-            // HESAP VARSA VE BANLIYSA
-            if (data && data.banned) {
-                return alert("Bu hesabın sisteme erişimi engellenmiştir!");
-            }
+            if (data && data.banned) return alert("Bu hesabın sisteme erişimi engellenmiştir!");
             
-            // HESAP VARSA VE ŞİFRELİYSE (Korumalı Hesap / Admin)
             if (data && data.password) {
                 if (passInput.style.display === 'none') {
-                    // İlk defa tıklanıyorsa şifre kutusunu aç
                     alert(`Bu hesap korumalıdır (@${val}). Lütfen şifrenizi girin.`);
                     passInput.style.display = 'block';
                     passInput.focus();
                     return;
                 } else {
-                    // Şifre kutusu açıksa şifreyi kontrol et
-                    if (passInput.value !== data.password) {
-                        return alert("Hatalı şifre girdiniz!");
-                    }
+                    if (passInput.value !== data.password) return alert("Hatalı şifre girdiniz!");
                 }
             }
 
-            // GİRİŞ BAŞARILI
             myUsername = val;
             localStorage.setItem('mm26_username', myUsername);
             
-            // Sadece yeni kayıt ise oluşturma tarihini yaz, eski hesapsa sadece online yap
             if (!data) usersRef.child(myUsername).update({ username: myUsername, createdAt: Date.now() });
             else usersRef.child(myUsername).update({ lastActive: Date.now() });
             
             welcomeModal.style.display = 'none'; 
             askNotificationPermission(); 
+            initInboxListener(); // Giriş başarılı olunca mesaj kutusunu dinle
             notifSound.volume = 0;
             notifSound.play().then(() => { notifSound.pause(); notifSound.volume = 1; }).catch(e => console.log(e));
         });
@@ -559,71 +608,43 @@
     const adminCloseBtn = document.getElementById('admin-close');
     const adminUserList = document.getElementById('admin-user-list');
 
-    adminBtn.addEventListener('click', () => {
-        renderAdminPanel();
-        adminModal.style.display = 'flex';
-    });
-
+    adminBtn.addEventListener('click', () => { renderAdminPanel(); adminModal.style.display = 'flex'; });
     adminCloseBtn.onclick = () => { adminModal.style.display = 'none'; };
 
     function renderAdminPanel() {
         adminUserList.innerHTML = '';
-        const userKeys = Object.keys(allUsersData);
-        
-        userKeys.forEach(uKey => {
+        Object.keys(allUsersData).forEach(uKey => {
             const uData = allUsersData[uKey];
             const div = document.createElement('div');
             div.className = 'admin-user-row';
             
-            // Badge (Etiket) Belirleme
             let badgeHTML = '';
             if (uData.banned) badgeHTML = `<span class="admin-user-role banned-badge">BANLI</span>`;
             else if (uData.role === 'admin') badgeHTML = `<span class="admin-user-role admin-badge">ADMİN</span>`;
             else if (uData.verified) badgeHTML = `<span class="admin-user-role" style="background:var(--mention); color:#fff;">MAVİ TİK</span>`;
             else badgeHTML = `<span class="admin-user-role">KULLANICI</span>`;
 
-            // Aksiyon Butonları
             let actionsHTML = '';
-            
-            // 1. Ban Butonu
             if (uData.banned) actionsHTML += `<button class="admin-btn-small success" onclick="adminAction('${uKey}', 'unban')">Ban Kaldır</button>`;
             else actionsHTML += `<button class="admin-btn-small danger" onclick="adminAction('${uKey}', 'ban')">Banla</button>`;
             
-            // 2. Mavi Tik Butonu
             if (uData.verified) actionsHTML += `<button class="admin-btn-small" onclick="adminAction('${uKey}', 'unverify')">Tiki Al</button>`;
             else actionsHTML += `<button class="admin-btn-small primary" onclick="adminAction('${uKey}', 'verify')">Mavi Tik</button>`;
 
-            // 3. Admin Yap Butonu
             if (uData.role === 'admin') actionsHTML += `<button class="admin-btn-small" onclick="adminAction('${uKey}', 'removeAdmin')">Admin Al</button>`;
             else actionsHTML += `<button class="admin-btn-small" style="background:#f5a623; color:#000;" onclick="adminAction('${uKey}', 'makeAdmin')">Admin Yap</button>`;
             
-            // 4. Sil Butonu
             actionsHTML += `<button class="admin-btn-small danger" onclick="adminAction('${uKey}', 'delete')">Kökten Sil</button>`;
 
-            div.innerHTML = `
-                <div class="admin-user-info">
-                    ${escapeHTML(uKey)} ${badgeHTML}
-                </div>
-                <div class="admin-actions">
-                    ${actionsHTML}
-                </div>
-            `;
+            div.innerHTML = `<div class="admin-user-info">${escapeHTML(uKey)} ${badgeHTML}</div><div class="admin-actions">${actionsHTML}</div>`;
             adminUserList.appendChild(div);
         });
     }
 
-    // Global Admin Fonksiyonları
     window.adminAction = function(targetUser, action) {
-        if (targetUser === myUsername && action !== 'unverify') {
-            return alert("Kendi kendine bu işlemi yapamazsın.");
-        }
-
-        if (action === 'ban') {
-            if(confirm(`@${targetUser} kullanıcısını banlamak istiyor musunuz?`)) usersRef.child(targetUser).update({banned: true});
-        } 
-        else if (action === 'unban') {
-            usersRef.child(targetUser).update({banned: false});
-        } 
+        if (targetUser === myUsername && action !== 'unverify') return alert("Kendi kendine bu işlemi yapamazsın.");
+        if (action === 'ban') { if(confirm(`@${targetUser} kullanıcısını banlamak istiyor musunuz?`)) usersRef.child(targetUser).update({banned: true}); } 
+        else if (action === 'unban') { usersRef.child(targetUser).update({banned: false}); } 
         else if (action === 'verify' || action === 'makeAdmin') {
             const roleText = action === 'verify' ? 'Mavi Tikli' : 'Admin';
             const pass = prompt(`Bu hesabı ${roleText} yapmak istiyorsunuz.\nHesabın çalınmaması için bir şifre belirleyin:`);
@@ -635,25 +656,140 @@
                 alert(`İşlem başarılı. Kullanıcının şifresi: ${pass}`);
             }
         } 
-        else if (action === 'unverify') {
-            if(confirm('Mavi tiki almak istiyor musunuz? Şifre koruması kaldırılacaktır.')) {
-                usersRef.child(targetUser).update({verified: false, password: null});
-            }
-        } 
-        else if (action === 'removeAdmin') {
-            if(confirm('Yöneticiliğini almak istiyor musunuz? Şifre koruması kaldırılacaktır.')) {
-                usersRef.child(targetUser).update({role: 'user', password: null});
-            }
-        } 
-        else if (action === 'delete') {
-            if(confirm(`DİKKAT! @${targetUser} hesabını tamamen siliyorsunuz. Geri alınamaz!`)) {
-                usersRef.child(targetUser).remove();
-            }
-        }
-        
-        // Ekranı güncelle
+        else if (action === 'unverify') { if(confirm('Mavi tiki almak istiyor musunuz?')) usersRef.child(targetUser).update({verified: false, password: null}); } 
+        else if (action === 'removeAdmin') { if(confirm('Yöneticiliğini almak istiyor musunuz?')) usersRef.child(targetUser).update({role: 'user', password: null}); } 
+        else if (action === 'delete') { if(confirm(`DİKKAT! @${targetUser} hesabını tamamen siliyorsunuz!`)) usersRef.child(targetUser).remove(); }
         setTimeout(renderAdminPanel, 300);
     };
+
+    // ========================================================
+    // YENİ: ÖZEL MESAJLAŞMA (DM) VE INBOX (MESAJ KUTUSU)
+    // ========================================================
+    const inboxModal = document.getElementById('inbox-modal');
+    const dmModal = document.getElementById('dm-modal');
+    const dmBtnProfile = document.getElementById('dm-btn');
+    let currentDMChat = null;
+    let dmListener = null;
+
+    // Mesaj Kutunu Aç
+    document.getElementById('open-inbox-btn').addEventListener('click', () => {
+        inboxModal.style.display = 'flex';
+    });
+
+    // Profildeki Mesaj Gönder Butonu
+    dmBtnProfile.onclick = () => {
+        document.getElementById('profile-modal').style.display = 'none';
+        openDMChat(currentProfileUser);
+    };
+
+    function getChatId(u1, u2) {
+        return [u1, u2].sort().join('_');
+    }
+
+    function openDMChat(targetUser) {
+        currentDMChat = targetUser;
+        document.getElementById('dm-header-name').textContent = targetUser;
+        dmModal.style.display = 'flex';
+        inboxModal.style.display = 'none';
+        
+        const chatId = getChatId(myUsername, targetUser);
+        
+        // Okundu İşaretle
+        inboxRef.child(myUsername).child(targetUser).update({ unread: false });
+
+        if (dmListener) dmRef.child(chatId).off('value', dmListener);
+        
+        // Mesajları Dinle
+        dmListener = dmRef.child(chatId).on('value', snap => {
+            const msgs = snap.val() || {};
+            const container = document.getElementById('dm-messages');
+            container.innerHTML = '';
+            
+            Object.keys(msgs).forEach(k => {
+                const m = msgs[k];
+                const div = document.createElement('div');
+                div.className = `dm-bubble ${m.sender === myUsername ? 'mine' : 'theirs'}`;
+                
+                // Linkleri tıklanabilir yap
+                let safeDM = escapeHTML(m.text);
+                safeDM = safeDM.replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" style="color:inherit; text-decoration:underline;">$1</a>');
+                
+                div.innerHTML = `${safeDM} <div class="dm-time">${m.time}</div>`;
+                container.appendChild(div);
+            });
+            container.scrollTop = container.scrollHeight;
+        });
+    }
+
+    // DM Gönderme İşlemi
+    function sendDM() {
+        const text = document.getElementById('dm-input').value.trim();
+        if(!text || !currentDMChat) return;
+
+        const chatId = getChatId(myUsername, currentDMChat);
+        const timestamp = Date.now();
+        const timeStr = new Date(timestamp).toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' });
+
+        dmRef.child(chatId).push({ sender: myUsername, text: text, timestamp: timestamp, time: timeStr });
+
+        // İki tarafın da inbox'unu güncelle
+        const msgData = { lastMsg: text, timestamp: timestamp, sender: myUsername };
+        inboxRef.child(myUsername).child(currentDMChat).update({...msgData, unread: false});
+        inboxRef.child(currentDMChat).child(myUsername).update({...msgData, unread: true});
+
+        document.getElementById('dm-input').value = '';
+    }
+
+    document.getElementById('dm-send-btn').onclick = sendDM;
+    document.getElementById('dm-input').onkeypress = (e) => { if(e.key === 'Enter') sendDM(); };
+
+    // Inbox'u Arka Planda Sürekli Dinle (Bildirimler için)
+    function initInboxListener() {
+        inboxRef.child(myUsername).on('value', snap => {
+            const inbox = snap.val() || {};
+            let hasUnread = false;
+            const inboxList = document.getElementById('inbox-list');
+            inboxList.innerHTML = '';
+
+            const chats = Object.keys(inbox).map(k => ({ user: k, ...inbox[k] })).sort((a,b) => b.timestamp - a.timestamp);
+
+            chats.forEach(chat => {
+                if (chat.unread) {
+                    hasUnread = true;
+                    // Arka Plan Bildirimi (Sekme açık kaldığı sürece çalışır)
+                    if (chat.timestamp > APP_LOAD_TIME && !notifiedMessages.has('dm_'+chat.timestamp)) {
+                        notifiedMessages.add('dm_'+chat.timestamp);
+                        if (document.hidden || currentDMChat !== chat.user) {
+                            sendDesktopNotification(`Özel Mesaj: ${chat.user}`, chat.lastMsg);
+                            notifSound.currentTime = 0; notifSound.play().catch(e=>console.log(e));
+                        }
+                    }
+                }
+
+                const uData = allUsersData[chat.user] || {};
+                let avatarHTML = uData.profilePic 
+                    ? `<img src="${uData.profilePic}" class="sugg-avatar">` 
+                    : `<div class="sugg-avatar">${chat.user.charAt(0).toUpperCase()}</div>`;
+
+                const div = document.createElement('div');
+                div.className = 'inbox-item';
+                div.innerHTML = `
+                    ${avatarHTML}
+                    <div style="flex:1; overflow:hidden;">
+                        <div style="font-weight:bold; font-size:1rem;">${escapeHTML(chat.user)}</div>
+                        <div style="font-size:0.85rem; color:#888; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">
+                            ${chat.sender === myUsername ? 'Sen: ' : ''}${escapeHTML(chat.lastMsg)}
+                        </div>
+                    </div>
+                    ${chat.unread ? '<div class="inbox-unread-dot"></div>' : ''}
+                `;
+                div.onclick = () => openDMChat(chat.user);
+                inboxList.appendChild(div);
+            });
+
+            document.getElementById('inbox-badge').style.display = hasUnread ? 'block' : 'none';
+        });
+    }
 
     // ========================================================
     // ARAMA ÇUBUĞU
@@ -672,10 +808,7 @@
         if (filteredUsers.length > 0) {
             filteredUsers.forEach(user => {
                 const userData = allUsersData[user];
-                let avatarHTML = '';
-                if (userData && userData.profilePic) avatarHTML = `<img src="${userData.profilePic}" class="sugg-avatar">`;
-                else avatarHTML = `<div class="sugg-avatar">${escapeHTML(user.charAt(0).toUpperCase())}</div>`;
-                
+                let avatarHTML = userData && userData.profilePic ? `<img src="${userData.profilePic}" class="sugg-avatar">` : `<div class="sugg-avatar">${escapeHTML(user.charAt(0).toUpperCase())}</div>`;
                 let verifiedHTML = userData.verified || userData.role === 'admin' ? `<svg class="verified-badge"><use href="#icon-verified"></use></svg>` : '';
 
                 const div = document.createElement('div');
@@ -685,14 +818,10 @@
                 suggestionsBox.appendChild(div);
             });
             suggestionsBox.style.display = 'block';
-        } else {
-            suggestionsBox.style.display = 'none';
-        }
+        } else { suggestionsBox.style.display = 'none'; }
     });
 
-    document.addEventListener('click', (e) => {
-        if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) suggestionsBox.style.display = 'none';
-    });
+    document.addEventListener('click', (e) => { if (!searchInput.contains(e.target) && !suggestionsBox.contains(e.target)) suggestionsBox.style.display = 'none'; });
 
     // ========================================================
     // PROFİL GÖRÜNTÜLEME
@@ -720,7 +849,6 @@
         const targetUserData = allUsersData[targetUsername];
         if(!targetUserData) return;
 
-        // Avatar
         if (targetUserData.profilePic) {
             profileImg.src = targetUserData.profilePic;
             profileImg.style.display = 'block'; profileInitial.style.display = 'none';
@@ -729,28 +857,26 @@
             profileImg.style.display = 'none'; profileInitial.style.display = 'flex';
         }
         
-        // Mavi Tik Kontrol
         if (targetUserData.verified || targetUserData.role === 'admin') profileVerifiedIcon.style.display = 'block';
         else profileVerifiedIcon.style.display = 'none';
         
-        // Biyografi
-        const defaultBio = "Merhaba, ben Middle Message 26 kullanıcısıyım.";
-        profileBio.textContent = targetUserData.bio ? targetUserData.bio : defaultBio;
+        profileBio.textContent = targetUserData.bio ? targetUserData.bio : "Merhaba, ben Middle Message 26 kullanıcısıyım.";
         
-        // Kendi Profilim Mi?
+        // KENDİ PROFİLİMSE VEYA BAŞKASININ PROFİLİYSE GÖSTERİLECEK BUTONLAR
         if (targetUsername === myUsername) {
             followBtn.style.display = 'none'; 
+            dmBtnProfile.style.display = 'none'; // Kendime mesaj atamam
             avatarUploadLabel.style.display = 'flex';
             editBioBtn.style.display = 'block';
         } else {
             followBtn.style.display = 'block'; 
+            dmBtnProfile.style.display = 'block'; // Başkasına özel mesaj atabilirim
             avatarUploadLabel.style.display = 'none';
             editBioBtn.style.display = 'none';
         }
 
         profileModal.style.display = 'flex';
 
-        // Takipçi Dinleme
         if (profileListener) followersRef.child(currentProfileUser).off('value', profileListener);
         profileListener = followersRef.child(currentProfileUser).on('value', snap => {
             const followersData = snap.val();
@@ -831,9 +957,7 @@
         if (names.length > 0) {
             typingIndicatorDiv.textContent = names.join(', ') + ' yazıyor...';
             typingIndicatorDiv.style.display = 'block';
-        } else {
-            typingIndicatorDiv.style.display = 'none';
-        }
+        } else { typingIndicatorDiv.style.display = 'none'; }
     });
 
     // ========================================================
@@ -889,11 +1013,12 @@
             const mentionTag = `@${myUsername}`;
             const isMentioned = myUsername && msg.text && msg.text.toLowerCase().includes(mentionTag.toLowerCase());
 
+            // GENEL AKIŞ BİLDİRİMİ
             if (msg.timestamp > APP_LOAD_TIME && msg.username !== myUsername && !notifiedMessages.has(msg.id)) {
                 notifiedMessages.add(msg.id);
                 hasNewUnseenMessage = true;
                 if (isMentioned) sendDesktopNotification("Biri senden bahsetti!", `${msg.username}: "${msg.text}"`);
-                else if (document.hidden) sendDesktopNotification(`Yeni Mesaj: ${msg.username}`, msg.text);
+                else if (document.hidden) sendDesktopNotification(`Genel Akış - ${msg.username}`, msg.text);
             }
 
             const isLiked = localLikes[msg.id];
@@ -922,7 +1047,6 @@
                 renderAvatarHTML = `<div class="avatar-circle clickable-profile" onclick="openProfile('${escapeHTML(msg.username)}')">${escapeHTML(msg.avatarChar || 'A')}</div>`;
             }
 
-            // SADECE KENDİ MESAJINI VEYA ADMİNSEN HERKESİN MESAJINI SİLEBİLİRSİN
             let deleteBtnHTML = '';
             let iamAdmin = (allUsersData[myUsername] && allUsersData[myUsername].role === 'admin');
             
